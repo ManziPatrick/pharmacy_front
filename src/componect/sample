@@ -1,0 +1,300 @@
+import React, { useState, useEffect } from 'react';
+import { getUserFromToken } from '../utils/auth';
+import { generateAvatar } from '../utils/avatar';
+import Notificat from '../assets/notification.png';
+import { Link } from 'react-router-dom';
+import io from 'socket.io-client';
+
+const Navbar = () => {
+  const [user, setUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState([]);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const userData = getUserFromToken(token);
+      if (userData && userData._id) {
+        setUser(userData);
+        fetchNotifications(userData._id);
+
+        // Get user's location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setUserLocation({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+            },
+            (error) => {
+              console.error("Error getting user location:", error);
+            }
+          );
+        }
+
+        const newSocket = io('http://localhost:5000', {
+          transports: ['websocket'],
+          auth: { token },
+        });
+
+        setSocket(newSocket);
+
+        newSocket.emit('join', userData._id);
+
+        // Listen for different notification types
+        newSocket.on('new_request', handleNewNotification);
+        newSocket.on('status_update', handleNewNotification);
+        newSocket.on('new_medicine', handleNewNotification);
+
+        // Cleanup on component unmount
+        return () => {
+          newSocket.disconnect();
+        };
+      } else {
+        console.error("Invalid user data in token");
+        localStorage.removeItem('authToken'); // Clear invalid token
+      }
+    } else {
+      console.log("No token found in local storage");
+    }
+  }, []);
+
+  const handleNewNotification = (notification) => {
+    setUnreadNotifications((prev) => [notification, ...prev]);
+    setNotificationCount((prev) => (prev === '99+' ? '99+' : prev + 1));
+  };
+
+  const fetchNotifications = async (userId) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(`http://localhost:5000/api/notify/notifications?userId=${userId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error('Failed to fetch notifications');
+      const data = await response.json();
+      const unread = data.filter((notif) => !notif.read);
+      setUnreadNotifications(unread.slice(0, 5));
+      setNotificationCount(unread.length > 99 ? '99+' : unread.length);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchTerm.trim()) {
+        performSearch(searchTerm);
+      } else {
+        setSearchResults([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
+  const performSearch = async (query) => {
+    setIsSearching(true);
+    try {
+      let url = `http://localhost:5000/api/medicines/all?searchTerm=${query}`;
+      
+      if (userLocation) {
+        url += `&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`;
+      }
+
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.error('Search error:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      performSearch(searchTerm);
+    }
+  };
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
+  const markAsRead = async (notificationId) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch('http://localhost:5000/api/notify/mark-as-read', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ notificationId }),
+      });
+      if (!response.ok) throw new Error('Failed to mark as read');
+
+      setUnreadNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
+      setNotificationCount((prev) => (prev === '99+' ? '99+' : prev - 1));
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
+  return (
+    <header className="bg-white shadow relative">
+      <div className="container mx-auto flex items-center justify-between py-4 px-4">
+        <div className="flex items-center space-x-2">
+          <img
+            src="https://via.placeholder.com/40"
+            alt="PharmaCare Logo"
+            className="h-10 w-10"
+          />
+          <span className="text-2xl font-bold text-green-600">PharmaCare</span>
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="flex space-x-6">
+          <Link to="/" className="text-gray-600 hover:text-green-600">Home</Link>
+          <Link to="/about" className="text-gray-600 hover:text-green-600">About</Link>
+          <Link to="/contact" className="text-gray-600 hover:text-green-600">Contact</Link>
+          <Link to="/profile" className="text-gray-600 hover:text-green-600">Profile</Link>
+        </nav>
+
+        <div className="flex-grow mx-4 relative">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <input
+              type="text"
+              placeholder="Search medicines..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-green-600"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-4.35-4.35M17 10a7 7 0 1 0-14 0 7 7 0 0 0 14 0z"
+                />
+              </svg>
+            </button>
+          </form>
+
+          {searchResults.length > 0 && (
+            <div className="absolute mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
+              <ul>
+                {searchResults.map((medicine) => (
+                  <Link to={`/medicines/${medicine._id}`} key={medicine._id}>
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <span className="font-semibold">{medicine.name}</span>
+                          <span className="ml-2 text-sm text-gray-600">
+                            Expires: {new Date(medicine.expiryDate).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {medicine.distance ? `${medicine.distance.toFixed(0)} meters` : 'Distance unknown'}
+                        </div>
+                      </div>
+                    </li>
+                  </Link>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="relative">
+          <img
+            src={Notificat}
+            alt="Notifications"
+            className="h-8 w-8 cursor-pointer"
+            onClick={toggleNotifications}
+          />
+          {notificationCount > 0 && (
+            <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs font-semibold">
+              {notificationCount}
+            </span>
+          )}
+          {showNotifications && (
+            <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-md shadow-lg z-20">
+              <div className="p-4">
+                <h3 className="font-semibold">Notifications</h3>
+                <ul>
+                  {unreadNotifications.length > 0 ? (
+                    unreadNotifications.map((notif) => (
+                      <li
+                        key={notif._id}
+                        className="py-2 border-b border-gray-200"
+                        onClick={() => markAsRead(notif._id)}
+                      >
+                        {notif.message}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="py-2 text-gray-500">No new notifications</li>
+                  )}
+                </ul>
+              </div>
+            </div>
+          )}
+          <div className="flex items-center space-x-2">
+            <img
+              src={user?.avatar || generateAvatar(user?.name)}
+              alt="User Avatar"
+              className="h-10 w-10 rounded-full"
+            />
+            <span className="text-gray-700">{user?.name || 'User'}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Navbar;
