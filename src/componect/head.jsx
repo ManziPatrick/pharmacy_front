@@ -319,7 +319,11 @@ const Navbar = () => {
                 </div>
               </>
             ) : (
+              <Link
+          to="/login"
+            >
               <p className="text-gray-600">Not Logged In</p>
+              </Link>
             )}
           </div>
         </div>
