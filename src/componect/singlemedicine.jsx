@@ -19,7 +19,7 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/medicines/one/${productId}`);
+        const response = await fetch(`https://pharmacies-management.onrender.com/api/medicines/one/${productId}`);
         const data = await response.json();
         setProduct(data);
       } catch (error) {
@@ -64,7 +64,7 @@ const ProductPage = () => {
         throw new Error('Product data is missing or does not include pharmacy ID');
       }
 
-      const response = await fetch(`http://localhost:5000/api/requests`, {
+      const response = await fetch(`https://pharmacies-management.onrender.com/api/requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

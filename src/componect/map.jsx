@@ -23,7 +23,7 @@ const PharmacyMap = () => {
           return;
         }
 
-        const response = await fetch(`http://localhost:5000/api/users`, { 
+        const response = await fetch(`https://pharmacies-management.onrender.com/api/users`, { 
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -20,7 +20,7 @@ const Requests = () => {
       const fetchPharmacyData = async () => {
         try {
           console.log('Fetching data for pharmacyId:', pharmacyId);
-          const response = await fetch(`http://localhost:5000/api/users/${pharmacyId}`);
+          const response = await fetch(`https://pharmacies-management.onrender.com/api/users/${pharmacyId}`);
           const data = await response.json();
           console.log('Pharmacy data:', data);
           setPharmacy(data);
@@ -36,7 +36,7 @@ const Requests = () => {
   
   const updateRequestStatus = async (requestId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/requests/${pharmacyId}/${requestId}/status`, {
+      const response = await fetch(`https://pharmacies-management.onrender.com/api/requests/${pharmacyId}/${requestId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
