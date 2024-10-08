@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Heart, Eye, ChevronRight } from 'lucide-react';
 import image from "../assets/pexels-pixabay-159211.jpg"
+import { useNavigate } from 'react-router-dom';
 const MedicineListing = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [medicines, setMedicines] = useState([]);
 
   useEffect(() => {
+    
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/categories');
+        const response = await fetch(`http://localhost:5000/api/categories`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -41,7 +43,11 @@ const MedicineListing = () => {
 
     fetchMedicines();
   }, [selectedCategory]);
-
+  const navigate = useNavigate(); 
+  const handleCardClick = (id) => {
+  
+    navigate(`/medicines/${id}`);
+  };
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
   };
@@ -79,13 +85,16 @@ const MedicineListing = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {medicines.map((medicine) => (
               <div key={medicine._id} className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-1">
-                <img src={image} alt={medicine.name} className="w-full h-36 object-cover" />
+                <img src={medicine?.images[0]||image} alt={medicine.name} className="w-full h-36 object-cover" />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">{medicine.name}</h3>
                   <p className="text-xs text-gray-500 mb-2">Qty: {medicine.quantity} | Exp: {new Date(medicine.expiryDate).toLocaleDateString()}</p>
                   <p className="text-lg font-bold text-green-500 mb-3">${medicine.price.toFixed(2)}</p>
                   <div className="flex justify-between items-center">
-                    <button className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm flex items-center transition-colors duration-200 hover:bg-blue-600">
+                    <button 
+                    className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm flex items-center transition-colors duration-200 hover:bg-blue-600" 
+                    onClick={() => handleCardClick(medicine._id)} 
+                    >
                       <ShoppingCart className="mr-1" size={14} />
                       Request
                     </button>

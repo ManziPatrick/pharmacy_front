@@ -39,7 +39,7 @@ const Navbar = () => {
           );
         }
 
-        const newSocket = io('http://localhost:5000', {
+        const newSocket = io(http://localhost:5000, {
           transports: ['websocket'],
           auth: { token },
         });
@@ -155,7 +155,7 @@ const Navbar = () => {
         throw new Error('No authentication token found');
       }
 
-      const response = await fetch('http://localhost:5000/api/notify/mark-as-read', {
+      const response = await fetch(`http://localhost:5000/api/notify/mark-as-read`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

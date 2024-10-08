@@ -8,8 +8,11 @@ import Categories from './pages/category';
 import About from './pages/about';
 import Contactus from './pages/contactus';
 import SingleM from './pages/singlemedicine';
+import Chat from './pages/chat';
+import Store from './pages/store';
 
 function App() {
+  const [userId, setUserId] = React.useState(null);
   return (
     <Router>
       <Routes>
@@ -20,6 +23,13 @@ function App() {
         <Route path="/categories" element={<Categories />} />
         <Route path="/about" element={<About/>} />
         <Route path="/contact" element={<Contactus />} />
+        <Route path="/store" element={<Store/>} />
+        <Route path="/ask" element={<Chat />} />
+        <Route path="/ask" element={<Chat userId={userId} />} />
+        <Route
+          path="/chat/:pharmacyId" 
+          element={<Chat userId={userId} />} 
+        />
         <Route path="/medicines/:id" element={<SingleM/>} />
       </Routes>
     </Router>

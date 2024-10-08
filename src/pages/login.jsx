@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import image from '../assets/pexels-fr3nks-287227.jpg'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ const Login = () => {
     if (validateForm()) {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/users/login', {
+        const response = await fetch(`http://localhost:5000/api/users/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -49,7 +50,7 @@ const Login = () => {
         const data = await response.json();
         
         if (response.ok) {
-          // Extract token from the response (assuming it's called 'token')
+    
           const { token } = data;
   
           // Save the token in local storage
@@ -72,46 +73,46 @@ const Login = () => {
   };
   
 
-  const handleForgotPassword = async () => {
-    if (!formData.email) {
-      setFormErrors({ email: "Please enter your email address" });
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const response = await fetch('http://localhost:5000/api/users/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: formData.email }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setLoginMessage('Password reset instructions sent to your email.');
-      } else {
-        setLoginMessage(data.message || 'Failed to send reset instructions. Please try again.');
-      }
-    } catch (error) {
-      setLoginMessage('An error occurred. Please try again later.');
-      console.error('Forgot password error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handleForgotPassword = async () => {
+  //   if (!formData.email) {
+  //     setFormErrors({ email: "Please enter your email address" });
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/users/forgot-password', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ email: formData.email }),
+  //     });
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       setLoginMessage('Password reset instructions sent to your email.');
+  //     } else {
+  //       setLoginMessage(data.message || 'Failed to send reset instructions. Please try again.');
+  //     }
+  //   } catch (error) {
+  //     setLoginMessage('An error occurred. Please try again later.');
+  //     console.error('Forgot password error:', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <div className="w-1/2 bg-blue-600 flex items-center justify-center">
+      <div className="w-1/2 bg-green-600 flex items-center justify-center">
         <img 
-          src="/api/placeholder/800/600" 
+          src={image} 
           alt="Pharmacy illustration" 
-          className="max-w-full max-h-full object-cover"
+          className="max-w-full  h-screen object-cover"
         />
       </div>
       <div className="w-1/2 flex items-center justify-center">
         <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-xl">
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Pharmacy Login</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center text-green-600">Pharmacy Login</h2>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
@@ -139,22 +140,27 @@ const Login = () => {
                 {formErrors.password && <p className="text-red-500 text-sm mt-1">{formErrors.password}</p>}
               </div>
             </div>
-            {loginMessage && <p className="text-blue-500 text-sm mt-4">{loginMessage}</p>}
+            {loginMessage && <p className="text-green-600 text-sm mt-4">{loginMessage}</p>}
             <button 
               type="submit" 
-              className="w-full mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300"
+              className="w-full mt-6 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition duration-300"
               disabled={isLoading}
             >
               {isLoading ? 'Logging in...' : 'Log In'}
             </button>
           </form>
-          <button 
-            onClick={handleForgotPassword}
-            className="w-full mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300"
-            disabled={isLoading}
-          >
-            Forgot Password?
-          </button>
+          <button className="w-full mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300">
+          <Link
+          to="/register"
+            
+           
+            >
+             
+                  signup
+              
+          
+            </Link>
+            </button>
         </div>
       </div>
     </div>

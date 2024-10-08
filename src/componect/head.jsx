@@ -148,7 +148,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (!token) throw new Error('No authentication token found');
 
-      const response = await fetch('http://localhost:5000/api/notify/mark-as-read', {
+      const response = await fetch(`http://localhost:5000/api/notify/mark-as-read`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -342,7 +342,7 @@ const Navbar = () => {
           <Link to="/pharmacies" className="text-white text-sm font-semibold hover:underline">
             Pharmacies
           </Link>
-          <Link to="/medicine/:id" className="text-white text-sm font-semibold hover:underline">
+          <Link to="/store" className="text-white text-sm font-semibold hover:underline">
           Medicine
           </Link>
           <Link to="/about" className="text-white text-sm font-semibold hover:underline">
@@ -351,7 +351,10 @@ const Navbar = () => {
           <Link to="/contact" className="text-white text-sm font-semibold hover:underline">
             Contact Us
           </Link>
-          <span className="text-white text-sm font-semibold">Ask Your Pharmacist</span>
+          <Link to="/ask" className="text-white text-sm font-semibold">
+          Ask Your Pharmacist
+          </Link>
+         
         </div>
       </nav>
     </header>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import image2 from '../assets/pexels-karolina-grabowska-4021773.jpg'
+import { Link } from "react-router-dom";
 const SignUp = () => {
   const [formData, setFormData] = useState({
     pharmacyName: '',
@@ -75,7 +76,7 @@ const SignUp = () => {
     if (!passwordRegex.test(formData.password)) {
       errors.password = "Password must be at least 8 characters long and contain both letters and numbers";
     }
-    // Add more validations as needed
+   
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -86,7 +87,7 @@ const SignUp = () => {
     if (validateForm()) {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/users/register', {
+        const response = await fetch(`http://localhost:5000/api/users/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -115,9 +116,9 @@ const SignUp = () => {
     <div className="flex h-screen bg-gray-100">
       <div className="w-1/2 bg-green-600 flex items-center justify-center">
         <img 
-          src="/api/placeholder/800/600" 
+          src={image2} 
           alt="Pharmacy illustration" 
-          className="max-w-full max-h-full object-cover"
+          className="max-w-full w-full max-h-full object-cover"
         />
       </div>
       <div className="w-1/2 flex items-center justify-center overflow-y-auto">
@@ -236,6 +237,18 @@ const SignUp = () => {
               </p>
             )}
           </form>
+          <button className="w-full mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300">
+          <Link
+          to="/login"
+            
+           
+            >
+             
+                 Login
+              
+          
+            </Link>
+            </button>
         </div>
       </div>
     </div>
