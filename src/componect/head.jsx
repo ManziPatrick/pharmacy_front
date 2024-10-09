@@ -362,7 +362,7 @@ const Navbar = () => {
     >
       Requests
     </NavLink>
-    <NavLink
+    {/* <NavLink
       to="/bonuses"
       className={({ isActive }) =>
         isActive
@@ -381,7 +381,7 @@ const Navbar = () => {
       }
     >
       Pharmacies
-    </NavLink>
+    </NavLink> */}
     <NavLink
       to="/store"
       className={({ isActive }) =>

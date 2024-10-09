@@ -458,53 +458,67 @@ function EditMedicineDialog({ medicine, categories, onMedicineUpdated }) {
 }
 
 function CategoryTab({ categories, onCategoryAdded }) {
- const [isOpen, setIsOpen] = useState(false);
- const [categoryName, setCategoryName] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [categoryName, setCategoryName] = useState('');
 
- const handleSubmit = async (e) => {
-   e.preventDefault();
-   try {
-     await api.addCategory({ name: categoryName });
-     onCategoryAdded();
-     setIsOpen(false);
-     setCategoryName('');
-   } catch (error) {
-     console.error('Error adding category:', error);
-   }
- };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await api.addCategory({ name: categoryName });
+      onCategoryAdded();
+      setIsOpen(false);
+      setCategoryName('');
+    } catch (error) {
+      console.error('Error adding category:', error);
+    }
+  };
 
- return (
-   <>
-     <button
-       className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-       onClick={() => setIsOpen(true)}
-     >
-       <Plus className="h-4 w-4 inline-block mr-2" /> Add Category
-     </button>
-     {isOpen && (
-       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-         <div className="bg-white p-6 rounded-lg w-96">
-           <h2 className="text-xl font-bold mb-4">Add New Category</h2>
-           <form onSubmit={handleSubmit} className="space-y-4">
-             <input
-               className="w-full border p-2 rounded"
-               placeholder="Category Name"
-               value={categoryName}
-               onChange={(e) => setCategoryName(e.target.value)}
-             />
-             <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded">
-               Add Category
-             </button>
-           </form>
-           <button
-             className="mt-4 w-full bg-gray-300 hover:bg-gray-400 py-2 rounded"
-             onClick={() => setIsOpen(false)}
-           >
-             Cancel
-           </button>
-         </div>
-       </div>
-     )}
-   </>
- );
+  return (
+    <div>
+      <div className="flex justify-between mb-4">
+        <h2 className="text-xl font-semibold text-green-700">Categories</h2>
+        <button
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          onClick={() => setIsOpen(true)}
+        >
+          <Plus className="h-4 w-4 inline-block mr-2" /> Add Category
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {categories.map(category => (
+          <div key={category.id} className="border rounded p-4">
+            <h3 className="font-semibold">{category.name}</h3>
+          </div>
+        ))}
+      </div>
+
+      {isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Add New Category</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                className="w-full border p-2 rounded"
+                placeholder="Category Name"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+              />
+              <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded">
+                Add Category
+              </button>
+            </form>
+            <button
+              className="mt-4 w-full bg-gray-300 hover:bg-gray-400 py-2 rounded"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
+
+
