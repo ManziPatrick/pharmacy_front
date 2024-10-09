@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Camera, Send } from 'lucide-react';
 import io from 'socket.io-client';
+import Header from "../componect/head";
 import { getUserFromToken } from '../utils/auth';
 const API_BASE_URL = 'https://pharmacies-management.onrender.com';
 
@@ -241,6 +242,9 @@ const Chat = () => {
   };
 
   return (
+    <>
+    <Header/>
+   
     <div className="max-w-6xl mx-auto p-4 bg-white shadow-lg rounded-lg">
       <h1 className="text-3xl font-bold mb-6 text-green-600">Chat with Pharmacy</h1>
 
@@ -349,6 +353,7 @@ const Chat = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

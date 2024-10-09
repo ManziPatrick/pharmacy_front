@@ -4,6 +4,7 @@ import { generateAvatar } from '../utils/avatar';
 import Notificat from '../assets/notification.png';
 import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
+import { NavLink } from 'react-router-dom';
 
 
 const Navbar = () => {
@@ -330,37 +331,99 @@ const Navbar = () => {
       </div>
 
       <nav className="bg-green-500">
-        <div className="container mx-auto flex justify-between px-4 py-3">
-          <Link to="/" className="text-white text-sm font-semibold hover:underline">
-            Home
-          </Link>
-          <Link to="/categories" className="text-white text-sm font-semibold hover:underline">
-          categories
-          </Link>
-          <Link to="/requests" className="text-white text-sm font-semibold hover:underline">
-            Requests
-          </Link>
-          <Link to="/bonuses" className="text-white text-sm font-semibold hover:underline">
-            Bonuses
-          </Link>
-          <Link to="/pharmacies" className="text-white text-sm font-semibold hover:underline">
-            Pharmacies
-          </Link>
-          <Link to="/store" className="text-white text-sm font-semibold hover:underline">
-          Medicine
-          </Link>
-          <Link to="/about" className="text-white text-sm font-semibold hover:underline">
-            About Us
-          </Link>
-          <Link to="/contact" className="text-white text-sm font-semibold hover:underline">
-            Contact Us
-          </Link>
-          <Link to="/ask" className="text-white text-sm font-semibold">
-          Ask Your Pharmacist
-          </Link>
-         
-        </div>
-      </nav>
+  <div className="container mx-auto flex justify-between px-4 py-3">
+    <NavLink
+      to="/"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      Home
+    </NavLink>
+    <NavLink
+      to="/categories"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      Categories
+    </NavLink>
+    <NavLink
+      to="/requests"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      Requests
+    </NavLink>
+    <NavLink
+      to="/bonuses"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      Bonuses
+    </NavLink>
+    <NavLink
+      to="/pharmacies"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      Pharmacies
+    </NavLink>
+    <NavLink
+      to="/store"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      Medicine
+    </NavLink>
+    <NavLink
+      to="/about"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      About Us
+    </NavLink>
+    <NavLink
+      to="/contact"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      Contact Us
+    </NavLink>
+    <NavLink
+      to="/ask"
+      className={({ isActive }) =>
+        isActive
+          ? " text-blue-800 font-extrabold"
+          : "text-white text-sm font-semibold hover:underline"
+      }
+    >
+      Ask Your Pharmacist
+    </NavLink>
+  </div>
+</nav>
     </header>
   );
 };
