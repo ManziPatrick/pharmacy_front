@@ -250,7 +250,6 @@ function AddMedicineDialog({ categories, onMedicineAdded }) {
     data.append('expiryDate', formData.expiryDate);
     data.append('description', formData.description); // Added description
 
-    // Append images
     if (formData.images.length > 0) {
       formData.images.forEach(image => {
         data.append('images', image);

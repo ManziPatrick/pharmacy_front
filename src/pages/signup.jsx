@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import image2 from '../assets/pexels-karolina-grabowska-4021773.jpg'
+import image2 from '../assets/pexels-karolina-grabowska-4021773.jpg';
 import { Link } from "react-router-dom";
+
 const SignUp = () => {
   const [formData, setFormData] = useState({
     pharmacyName: '',
@@ -18,6 +19,7 @@ const SignUp = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [signupMessage, setSignupMessage] = useState('');
+  const [isLicenseValid, setIsLicenseValid] = useState(true);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,24 +70,77 @@ const SignUp = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
 
-
-
     if (!emailRegex.test(formData.email)) {
       errors.email = "Please enter a valid email address";
     }
     if (!passwordRegex.test(formData.password)) {
       errors.password = "Password must be at least 8 characters long and contain both letters and numbers";
     }
-   
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
+  const validateLicense = async () => {
+    const validationUrl = `https://licensing.moh.gov.rw:8443/client/download/application/${formData.licenseNumber}/details`;
+  
+    try {
+      const response = await fetch(validationUrl, {
+        method: 'GET',
+      });
+  
+      // Check if the response status is OK (200-299)
+      if (!response.ok) {
+        if (response.status === 404) {
+          setSignupMessage('License not found (404). Please check the license number.');
+        } else {
+          setSignupMessage(`An error occurred: ${response.status}`);
+        }
+        setIsLicenseValid(false);
+        return false;
+      }
+  
+      const contentType = response.headers.get('Content-Type');
+      if (contentType && contentType.includes('application')) {
+        // If the license data is returned in a downloadable format (PDF, etc.)
+        const data = await response.text(); // Or response.blob() depending on the type
+
+  
+        if (data) {
+
+          setIsLicenseValid(true); 
+          return true;
+        } else {
+          setSignupMessage('Invalid license number. Please check the license number and try again.');
+          setIsLicenseValid(false);
+          return false;
+        }
+      } else {
+        setSignupMessage('Unexpected response format from the license validation server.');
+        setIsLicenseValid(false);
+        return false;
+      }
+  
+    } catch (error) {
+      setSignupMessage('An error occurred while validating the license. Please try again later.');
+      console.error('License validation error:', error);
+      return false;
+    }
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (validateForm()) {
       setIsLoading(true);
+
+      
+      const isLicenseValid = await validateLicense();
+      if (!isLicenseValid) {
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch(`https://pharmacies-management.onrender.com/api/users/register`, {
           method: 'POST',
@@ -94,6 +149,7 @@ const SignUp = () => {
           },
           body: JSON.stringify(formData),
         });
+
         const data = await response.json();
         if (response.ok) {
           setSignupMessage('Registration successful! Please log in.');
@@ -169,8 +225,9 @@ const SignUp = () => {
                 onChange={handleInputChange}
                 placeholder="License Number"
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className={`w-full px-3 py-2 border ${isLicenseValid ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
               />
+              {!isLicenseValid && <p className="text-red-500 text-sm">Invalid License Number</p>}
               <input
                 type="email"
                 name="email"
@@ -238,17 +295,10 @@ const SignUp = () => {
             )}
           </form>
           <button className="w-full mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300">
-          <Link
-          to="/login"
-            
-           
-            >
-             
-                 Login
-              
-          
+            <Link to="/login">
+              Login
             </Link>
-            </button>
+          </button>
         </div>
       </div>
     </div>
