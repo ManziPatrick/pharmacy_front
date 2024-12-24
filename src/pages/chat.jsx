@@ -4,7 +4,7 @@ import { Camera, Send } from 'lucide-react';
 import io from 'socket.io-client';
 import Header from "../componect/head";
 import { getUserFromToken } from '../utils/auth';
-const API_BASE_URL = 'https://pharmacies-management.onrender.com';
+const API_BASE_URL = 'http://localhost:5000';
 
 const Button = ({ children, onClick, variant = 'default', className = '' }) => {
   const baseStyles = 'px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2';

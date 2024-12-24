@@ -31,7 +31,7 @@ const MedicineListing = () => {
     const fetchCategories = async () => {
       setLoadingCategories(true);
       try {
-        const response = await fetch(`https://pharmacies-management.onrender.com/api/categories`);
+        const response = await fetch(`http://localhost:5000/api/categories`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -52,7 +52,7 @@ const MedicineListing = () => {
       if (selectedCategory) {
         setLoadingMedicines(true);
         try {
-          const response = await fetch(`https://pharmacies-management.onrender.com/api/medicines/category/${selectedCategory._id}`);
+          const response = await fetch(`http://localhost:5000/api/medicines/category/${selectedCategory._id}`);
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }

@@ -53,7 +53,7 @@ const Navbar = () => {
   };
 
   const setupSocket = (userId, token) => {
-    const newSocket = io('https://pharmacies-management.onrender.com', {
+    const newSocket = io('http://localhost:5000', {
       transports: ['websocket'],
       auth: { token },
     });
@@ -76,7 +76,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (!token) throw new Error('No authentication token found');
 
-      const response = await fetch(`https://pharmacies-management.onrender.com/api/notify/notifications`, {
+      const response = await fetch(`http://localhost:5000/api/notify/notifications`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
@@ -107,20 +107,13 @@ const Navbar = () => {
   const performSearch = async (query) => {
     setIsSearching(true);
     try {
-      let url = `https://pharmacies-management.onrender.com/api/medicines/all?searchTerm=${query}`;
+      let url = `http://localhost:5000/api/medicines/all?searchTerm=${query}`;
       if (userLocation) {
         url += `&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`;
       }
 
-      const token = localStorage.getItem('authToken');
-      if (!token) throw new Error('No authentication token found');
 
-      const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setSearchResults(data);
@@ -149,7 +142,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (!token) throw new Error('No authentication token found');
 
-      const response = await fetch(`https://pharmacies-management.onrender.com/api/notify/mark-as-read`, {
+      const response = await fetch(`http://localhost:5000/api/notify/mark-as-read`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -331,99 +324,89 @@ const Navbar = () => {
       </div>
 
       <nav className="bg-green-500">
-  <div className="container mx-auto flex justify-between px-4 py-3">
-    <NavLink
-      to="/"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      Home
-    </NavLink>
-    <NavLink
-      to="/categories"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      Categories
-    </NavLink>
-    <NavLink
-      to="/requests"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      Requests
-    </NavLink>
-    {/* <NavLink
-      to="/bonuses"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      Bonuses
-    </NavLink>
-    <NavLink
-      to="/pharmacies"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      Pharmacies
-    </NavLink> */}
-    <NavLink
-      to="/store"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      Medicine
-    </NavLink>
-    <NavLink
-      to="/about"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      About Us
-    </NavLink>
-    <NavLink
-      to="/contact"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      Contact Us
-    </NavLink>
-    <NavLink
-      to="/ask"
-      className={({ isActive }) =>
-        isActive
-          ? " text-blue-800 font-extrabold"
-          : "text-white text-sm font-semibold hover:underline"
-      }
-    >
-      Ask Your Pharmacist
-    </NavLink>
-  </div>
-</nav>
+        <div className="container mx-auto flex justify-between px-4 py-3">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 font-extrabold"
+                : "text-white text-sm font-semibold hover:underline"
+            }
+          >
+            Home
+          </NavLink>
+          
+          <NavLink
+            to="/categories"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 font-extrabold"
+                : "text-white text-sm font-semibold hover:underline"
+            }
+          >
+            Categories
+          </NavLink>
+          
+          {user && (
+            <NavLink
+              to="/requests"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-800 font-extrabold"
+                  : "text-white text-sm font-semibold hover:underline"
+              }
+            >
+              Requests
+            </NavLink>
+          )}
+          
+          {user && (
+            <NavLink
+              to="/store"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-800 font-extrabold"
+                  : "text-white text-sm font-semibold hover:underline"
+              }
+            >
+              Medicine
+            </NavLink>
+          )}
+          
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 font-extrabold"
+                : "text-white text-sm font-semibold hover:underline"
+            }
+          >
+            About Us
+          </NavLink>
+          
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 font-extrabold"
+                : "text-white text-sm font-semibold hover:underline"
+            }
+          >
+            Contact Us
+          </NavLink>
+          
+          <NavLink
+            to="/ask"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 font-extrabold"
+                : "text-white text-sm font-semibold hover:underline"
+            }
+          >
+            Ask Your Pharmacist
+          </NavLink>
+        </div>
+      </nav>
     </header>
   );
 };

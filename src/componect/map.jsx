@@ -22,29 +22,26 @@ const PharmacyMap = () => {
       setLoading(true); // Set loading to true while fetching
       try {
         const token = localStorage.getItem('authToken');
-        if (!token) {
-          setError('No token found. Please log in.');
-          setLoading(false);
-          return;
+        const headers = { 'Content-Type': 'application/json' };
+
+        // Conditionally include Authorization header
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch(`https://pharmacies-management.onrender.com/api/users`, { 
+        const response = await fetch(`http://localhost:5000/api/users`, { 
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Include token
-          },
+          headers,
         });
 
-        if (response.status === 401) {
-          setError('Unauthorized. Please log in again.');
-          setLoading(false);
-          return;
-        }
-
         if (!response.ok) {
-          const errorData = await response.json();
-          setError(errorData.message || 'Error fetching pharmacy data.');
+          // Handle unauthorized or other errors
+          if (response.status === 401) {
+            setError('Unauthorized. Please log in to access private data.');
+          } else {
+            const errorData = await response.json();
+            setError(errorData.message || 'Error fetching pharmacy data.');
+          }
           setLoading(false);
           return;
         }
@@ -83,7 +80,16 @@ const PharmacyMap = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           {pharmacies.map((pharmacy) => (
-            <Marker key={pharmacy.id} position={[pharmacy.latitude, pharmacy.longitude]}>
+            <Marker 
+              key={pharmacy.id} 
+              position={[pharmacy.latitude, pharmacy.longitude]}
+              icon={L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // Custom icon for marker
+                iconSize: [30, 30],
+                iconAnchor: [15, 30],
+                popupAnchor: [0, -30],
+              })}
+            >
               <Popup>
                 <strong>{pharmacy.pharmacyName}</strong>
                 <br />

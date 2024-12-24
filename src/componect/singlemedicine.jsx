@@ -18,7 +18,7 @@ const ProductPage = () => {
     const fetchProduct = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`https://pharmacies-management.onrender.com/api/medicines/one/${id}`);
+        const response = await fetch(`http://localhost:5000/api/medicines/one/${id}`);
         if (!response.ok) throw new Error('Failed to fetch product');
         const data = await response.json();
         setProduct(data);
@@ -53,7 +53,7 @@ const ProductPage = () => {
       const userData = getUserFromToken(token);
       if (!userData?._id) throw new Error('Invalid user data');
 
-      const response = await fetch(`https://pharmacies-management.onrender.com/api/requests`, {
+      const response = await fetch(`http://localhost:5000/api/requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -65,7 +65,7 @@ export default function Requests() {
   const fetchPharmacyData = async (id) => {
     try {
       console.log('Fetching data for pharmacyId:', id);
-      const response = await fetch(`https://pharmacies-management.onrender.com/api/users/${id}`);
+      const response = await fetch(`http://localhost:5000/api/users/${id}`);
       if (!response.ok) throw new Error('Failed to fetch pharmacy data');
       const data = await response.json();
       console.log('Pharmacy data:', data);
@@ -92,7 +92,7 @@ export default function Requests() {
 
   const updateRequestStatus = async (requestId, newStatus) => {
     try {
-      const response = await fetch(`https://pharmacies-management.onrender.com/api/requests/${pharmacyId}/${requestId}/status`, {
+      const response = await fetch(`http://localhost:5000/api/requests/${pharmacyId}/${requestId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

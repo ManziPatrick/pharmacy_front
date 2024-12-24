@@ -5,29 +5,29 @@ import { getUserFromToken } from '../utils/auth';
 import { useGlobalUser} from './useUser'; 
 
 const api = {
-  getMedicines: (userId) => axios.get(`https://pharmacies-management.onrender.com/api/medicines/pharmacies/${userId}/medicines`, {
+  getMedicines: (userId) => axios.get(`http://localhost:5000/api/medicines/pharmacies/${userId}/medicines`, {
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     }
   }),
-  getCategories: () => axios.get(`https://pharmacies-management.onrender.com/api/categories`),
-  addMedicine: (formData) => axios.post(`https://pharmacies-management.onrender.com/api/medicines`, formData, {
+  getCategories: () => axios.get(`http://localhost:5000/api/categories`),
+  addMedicine: (formData) => axios.post(`http://localhost:5000/api/medicines`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
     }
   }),
-  updateMedicine: (id, medicine) => axios.put(`https://pharmacies-management.onrender.com/api/medicines/${id}`, medicine, {
+  updateMedicine: (id, medicine) => axios.put(`http://localhost:5000/api/medicines/${id}`, medicine, {
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     }
   }),
-  deleteMedicine: (id) => axios.delete(`https://pharmacies-management.onrender.com/api/medicines/${id}`, {
+  deleteMedicine: (id) => axios.delete(`http://localhost:5000/api/medicines/${id}`, {
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     }
   }),
-  addCategory: (category) => axios.post(`https://pharmacies-management.onrender.com/api/categories`, category, {
+  addCategory: (category) => axios.post(`http://localhost:5000/api/categories`, category, {
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
     }
