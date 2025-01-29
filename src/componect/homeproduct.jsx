@@ -53,7 +53,7 @@ const ProductGrid = () => {
         }
 
         const response = await fetch(
-          `http://localhost:5000/api/medicines/all?page=${currentPage}&limit=${itemsPerPage}`,
+          `https://pharmacies-management.onrender.com/api/medicines/all?page=${currentPage}&limit=${itemsPerPage}`,
           { headers }
         );
 

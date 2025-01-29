@@ -76,7 +76,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (!token) throw new Error('No authentication token found');
 
-      const response = await fetch(`http://localhost:5000/api/notify/notifications`, {
+      const response = await fetch(`https://pharmacies-management.onrender.com/api/notify/notifications`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
@@ -107,7 +107,7 @@ const Navbar = () => {
   const performSearch = async (query) => {
     setIsSearching(true);
     try {
-      let url = `http://localhost:5000/api/medicines/all?searchTerm=${query}`;
+      let url = `https://pharmacies-management.onrender.com/api/medicines/all?searchTerm=${query}`;
       if (userLocation) {
         url += `&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`;
       }
@@ -142,7 +142,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (!token) throw new Error('No authentication token found');
 
-      const response = await fetch(`http://localhost:5000/api/notify/mark-as-read`, {
+      const response = await fetch(`https://pharmacies-management.onrender.com/api/notify/mark-as-read`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
