@@ -19,7 +19,7 @@ const SignUp = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [signupMessage, setSignupMessage] = useState('');
-  const [isLicenseValid, setIsLicenseValid] = useState(true);
+  // const [isLicenseValid, setIsLicenseValid] = useState(true); // Commented out since we're not validating license
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -81,6 +81,8 @@ const SignUp = () => {
     return Object.keys(errors).length === 0;
   };
 
+  // License validation function - COMMENTED OUT
+  /*
   const validateLicense = async () => {
     const validationUrl = `https://licensing.moh.gov.rw:8443/client/download/application/${formData.licenseNumber}/details`;
   
@@ -127,6 +129,7 @@ const SignUp = () => {
       return false;
     }
   };
+  */
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -134,12 +137,14 @@ const SignUp = () => {
     if (validateForm()) {
       setIsLoading(true);
 
-      
+      // License validation removed - proceed directly to registration
+      /*
       const isLicenseValid = await validateLicense();
       if (!isLicenseValid) {
         setIsLoading(false);
         return;
       }
+      */
 
       try {
         const response = await fetch(`https://pharmacies-management.onrender.com/api/users/register`, {
@@ -225,9 +230,11 @@ const SignUp = () => {
                 onChange={handleInputChange}
                 placeholder="License Number"
                 required
-                className={`w-full px-3 py-2 border ${isLicenseValid ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                // Removed license validation styling: className={`w-full px-3 py-2 border ${isLicenseValid ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
               />
-              {!isLicenseValid && <p className="text-red-500 text-sm">Invalid License Number</p>}
+              {/* License validation error message removed */}
+              {/* {!isLicenseValid && <p className="text-red-500 text-sm">Invalid License Number</p>} */}
               <input
                 type="email"
                 name="email"
@@ -289,7 +296,7 @@ const SignUp = () => {
               {isLoading ? 'Registering...' : 'Register'}
             </button>
             {signupMessage && (
-              <p className={`mt-4 text-sm ${signupMessage.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>
+              <p className={`mt-4 text-sm ${signupMessage.includes('successfully') || signupMessage.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
                 {signupMessage}
               </p>
             )}
