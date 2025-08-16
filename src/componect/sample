@@ -39,7 +39,7 @@ const Navbar = () => {
           );
         }
 
-        const newSocket = io(http://localhost:5000, {
+        const newSocket = io(https://pharmacies-management.onrender.com, {
           transports: ['websocket'],
           auth: { token },
         });

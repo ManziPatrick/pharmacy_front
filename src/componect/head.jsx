@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../utils/auth';
 import { generateAvatar } from '../utils/avatar';
 import Notificat from '../assets/notification.png';
+import image from '../assets/download.png'
 import { Link, NavLink } from 'react-router-dom';
 import io from 'socket.io-client';
 
@@ -93,7 +94,7 @@ const Navbar = () => {
 
   const setupSocket = (userId, token) => {
     // Use import.meta.env for Vite/React, fallback to localhost
-    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'http://localhost:5000';
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'https://pharmacies-management.onrender.com';
     const newSocket = io(apiUrl, {
       transports: ['websocket', 'polling'],
       auth: { token },
@@ -203,7 +204,7 @@ const Navbar = () => {
         setNotificationCount(0);
         return;
       }
-      const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'https://pharmacies-management.onrender.com';
       const response = await fetch(`${apiUrl}/api/notify/notifications`, {
         headers: {
           'Content-Type': 'application/json',
@@ -332,7 +333,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (!token || !user?._id) return;
       
-      const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'https://pharmacies-management.onrender.com';
       const response = await fetch(`${apiUrl}/api/notify/test`, {
         method: 'POST',
         headers: {
@@ -361,7 +362,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (!token) return;
       
-      const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'https://pharmacies-management.onrender.com';
       const response = await fetch(`${apiUrl}/api/notify/online-users`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -387,7 +388,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (!token) return null;
       
-      const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_REACT_APP_API_URL || 'https://pharmacies-management.onrender.com';
       const response = await fetch(`${apiUrl}/api/users/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -411,7 +412,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="flex items-center space-x-2 flex-shrink-0">
           <img
-            src="https://via.placeholder.com/40"
+            src={image}
             alt="PharmaCare Logo"
             className="h-8 w-8 sm:h-10 sm:w-10"
           />

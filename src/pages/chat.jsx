@@ -6,7 +6,7 @@ import Header from "../componect/head";
 import { getUserFromToken } from '../utils/auth';
 import ApiService from '../utils/api';
 
-const API_BASE_URL = import.meta.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.REACT_APP_API_URL || 'https://pharmacies-management.onrender.com';
 
 const Button = ({ children, onClick, variant = 'default', className = '' }) => {
   const baseStyles = 'px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2';
