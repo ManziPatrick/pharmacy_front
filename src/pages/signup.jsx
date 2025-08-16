@@ -8,6 +8,7 @@ const SignUp = () => {
     location: '',
     phoneNumber: '',
     ownerName: '',
+    licenseNumber: '',
     email: '',
     password: '',
     latitude: '',
@@ -159,6 +160,15 @@ const SignUp = () => {
                 value={formData.ownerName}
                 onChange={handleInputChange}
                 placeholder="Owner Name"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <input
+                type="text"
+                name="licenseNumber"
+                value={formData.licenseNumber}
+                onChange={handleInputChange}
+                placeholder="License Number (any format accepted)"
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
