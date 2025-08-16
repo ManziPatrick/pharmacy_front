@@ -8,7 +8,6 @@ const SignUp = () => {
     location: '',
     phoneNumber: '',
     ownerName: '',
-    licenseNumber: '',
     email: '',
     password: '',
     latitude: '',
@@ -19,7 +18,6 @@ const SignUp = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [signupMessage, setSignupMessage] = useState('');
-  // const [isLicenseValid, setIsLicenseValid] = useState(true); // Commented out since we're not validating license
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -80,71 +78,12 @@ const SignUp = () => {
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
-  // License validation function - COMMENTED OUT
-  /*
-  const validateLicense = async () => {
-    const validationUrl = `https://licensing.moh.gov.rw:8443/client/download/application/${formData.licenseNumber}/details`;
-  
-    try {
-      const response = await fetch(validationUrl, {
-        method: 'GET',
-      });
-  
-      // Check if the response status is OK (200-299)
-      if (!response.ok) {
-        if (response.status === 404) {
-          setSignupMessage('License not found (404). Please check the license number.');
-        } else {
-          setSignupMessage(`An error occurred: ${response.status}`);
-        }
-        setIsLicenseValid(false);
-        return false;
-      }
-  
-      const contentType = response.headers.get('Content-Type');
-      if (contentType && contentType.includes('application')) {
-        // If the license data is returned in a downloadable format (PDF, etc.)
-        const data = await response.text(); // Or response.blob() depending on the type
-
-  
-        if (data) {
-
-          setIsLicenseValid(true); 
-          return true;
-        } else {
-          setSignupMessage('Invalid license number. Please check the license number and try again.');
-          setIsLicenseValid(false);
-          return false;
-        }
-      } else {
-        setSignupMessage('Unexpected response format from the license validation server.');
-        setIsLicenseValid(false);
-        return false;
-      }
-  
-    } catch (error) {
-      setSignupMessage('An error occurred while validating the license. Please try again later.');
-      console.error('License validation error:', error);
-      return false;
-    }
-  };
-  */
   
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
       setIsLoading(true);
-
-      // License validation removed - proceed directly to registration
-      /*
-      const isLicenseValid = await validateLicense();
-      if (!isLicenseValid) {
-        setIsLoading(false);
-        return;
-      }
-      */
 
       try {
         const response = await fetch(`https://pharmacies-management.onrender.com/api/users/register`, {
@@ -223,18 +162,6 @@ const SignUp = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
-              <input
-                type="text"
-                name="licenseNumber"
-                value={formData.licenseNumber}
-                onChange={handleInputChange}
-                placeholder="License Number"
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                // Removed license validation styling: className={`w-full px-3 py-2 border ${isLicenseValid ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500`}
-              />
-              {/* License validation error message removed */}
-              {/* {!isLicenseValid && <p className="text-red-500 text-sm">Invalid License Number</p>} */}
               <input
                 type="email"
                 name="email"
